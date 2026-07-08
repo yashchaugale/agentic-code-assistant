@@ -1,14 +1,10 @@
-import os
-from dotenv import load_dotenv
-from groq import Groq
-
-load_dotenv()
-
-client = Groq(
-    api_key=os.getenv("GROQ_API_KEY")
+from chat import (
+    add_user_message,
+    add_ai_message,
+    get_conversation
 )
 
-conversation = []
+from llm import ask_llm
 
 print("=" * 50)
 print("🤖 Agentic Code Assistant")
@@ -23,27 +19,10 @@ while True:
         print("\n👋 Goodbye!")
         break
 
-    # Save user message
-    conversation.append(
-        {
-            "role": "user",
-            "content": user_input
-        }
-    )
+    add_user_message(user_input)
 
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=conversation
-    )
+    answer = ask_llm(get_conversation())
 
-    ai_reply = response.choices[0].message.content
+    print("\nAI:", answer)
 
-    print("\nAI:", ai_reply)
-
-    # Save assistant reply
-    conversation.append(
-        {
-            "role": "assistant",
-            "content": ai_reply
-        }
-    )
+    add_ai_message(answer)

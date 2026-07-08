@@ -2,6 +2,7 @@ conversation = []
 
 
 def add_user_message(message):
+
     conversation.append(
         {
             "role": "user",
@@ -11,6 +12,7 @@ def add_user_message(message):
 
 
 def add_ai_message(message):
+
     conversation.append(
         {
             "role": "assistant",
@@ -20,4 +22,5 @@ def add_ai_message(message):
 
 
 def get_conversation():
+
     return conversation

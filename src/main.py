@@ -1,10 +1,8 @@
-from llm import ask_llm, summarize_file
-from chat import (
-    add_user_message,
-    add_ai_message,
-    get_conversation
-)
+from llm import summarize_file
+from agents.assistant import AssistantAgent
 from tools.file_reader import read_file
+
+agent = AssistantAgent()
 
 print("=" * 50)
 print("🤖 Agentic Code Assistant")
@@ -39,10 +37,10 @@ while True:
 
     # ---------- NORMAL CHAT ----------
 
-    add_user_message(user_input)
+    
 
-    answer = ask_llm(get_conversation())
+    answer = agent.chat(user_input)
 
     print("\nAI:", answer)
 
-    add_ai_message(answer)
+    

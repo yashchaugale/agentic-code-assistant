@@ -6,27 +6,37 @@ from chat import (
 
 from llm import ask_llm, summarize_file
 from tools.file_reader import read_file
+from tools.tool_selector import decide_tool
 
 
 class AssistantAgent:
 
     def chat(self, user_input):
 
-        # ---------------- FILE TOOL ----------------
+        # Ask the LLM if a tool is required
+        decision = decide_tool(user_input)
 
-        if user_input.startswith("read "):
+        print(f"\n[Decision] {decision}")
 
-            filename = user_input.replace("read ", "").strip()
+        # Execute Tool
+        if decision.startswith("TOOL:"):
 
-            file_content = read_file(filename)
+            try:
+                _, tool_name, filename = decision.split(":", 2)
 
-            if file_content is None:
-                return "❌ File not found."
+            except ValueError:
+                return "❌ Invalid tool response."
 
-            return summarize_file(file_content)
+            if tool_name == "read_file":
 
-        # ---------------- NORMAL CHAT ----------------
+                file_content = read_file(filename)
 
+                if file_content is None:
+                    return f"❌ File '{filename}' not found."
+
+                return summarize_file(file_content)
+
+        # No tool required -> Normal Chat
         add_user_message(user_input)
 
         answer = ask_llm(get_conversation())

@@ -5,7 +5,7 @@ from chat import (
 )
 
 from llm import ask_llm, summarize_file
-from tools.file_reader import read_file
+from tools.registry import TOOLS
 from tools.tool_selector import decide_tool
 
 
@@ -27,14 +27,17 @@ class AssistantAgent:
             except ValueError:
                 return "❌ Invalid tool response."
 
-            if tool_name == "read_file":
+            tool = TOOLS.get(tool_name)
 
-                file_content = read_file(filename)
+            if tool is None:
+                return f"❌ Unknown tool: {tool_name}"
+            
+            file_content = tool(filename)
 
-                if file_content is None:
-                    return f"❌ File '{filename}' not found."
+            if file_content is None:
+                return f"❌ File '{filename}' not found."
 
-                return summarize_file(file_content)
+            return summarize_file(file_content)
 
         # No tool required -> Normal Chat
         add_user_message(user_input)

@@ -5,8 +5,10 @@ from chat import (
 )
 
 from llm import ask_llm, summarize_file
-from tools.registry import TOOLS
 from tools.tool_selector import decide_tool
+from executors.tool_executor import ToolExecutor
+
+executor = ToolExecutor()
 
 
 class AssistantAgent:
@@ -22,17 +24,15 @@ class AssistantAgent:
         if decision.startswith("TOOL:"):
 
             try:
-                _, tool_name, filename = decision.split(":", 2)
+                _, tool_name, tool_input = decision.split(":", 2)
 
             except ValueError:
                 return "❌ Invalid tool response."
 
-            tool = TOOLS.get(tool_name)
-
-            if tool is None:
-                return f"❌ Unknown tool: {tool_name}"
-            
-            tool_result = tool(filename)
+            tool_result = executor.execute(
+                tool_name,
+                tool_input
+            )
 
             if not tool_result["success"]:
                 return f"❌ {tool_result['error']}"

@@ -32,12 +32,12 @@ class AssistantAgent:
             if tool is None:
                 return f"❌ Unknown tool: {tool_name}"
             
-            file_content = tool(filename)
+            tool_result = tool(filename)
 
-            if file_content is None:
-                return f"❌ File '{filename}' not found."
+            if not tool_result["success"]:
+                return f"❌ {tool_result['error']}"
 
-            return summarize_file(file_content)
+            return summarize_file(tool_result["data"])
 
         # No tool required -> Normal Chat
         add_user_message(user_input)

@@ -6,6 +6,14 @@ def read_file(file_path):
     path = Path(file_path)
 
     if not path.exists():
-        return None
+        return {
+            "success": False,
+            "data": None,
+            "error": "File not found"
+        }
 
-    return path.read_text(encoding="utf-8")
+    return {
+        "success": True,
+        "data": path.read_text(encoding="utf-8"),
+        "error": None
+    }

@@ -1,4 +1,5 @@
 from agents.assistant import AssistantAgent
+from services.repository_service import RepositoryService
 
 agent = AssistantAgent()
 
@@ -6,6 +7,9 @@ print("=" * 50)
 print("🤖 Agentic Code Assistant")
 print("Type 'exit' to quit.")
 print("=" * 50)
+service = RepositoryService()
+
+service.analyze_repository()
 
 while True:
 

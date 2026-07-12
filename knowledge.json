@@ -1,0 +1,47 @@
+{
+    "language": "Python",
+    "framework": "Python Application",
+    "entry_point": "src/main.py",
+    "important_files": [
+        "README.md",
+        "requirements.txt",
+        ".env.example",
+        "src/main.py"
+    ],
+    "files": [
+        ".env",
+        ".env.example",
+        ".gitignore",
+        "README.md",
+        "knowledge.json",
+        "requirements.txt",
+        "src/agents/assistant.py",
+        "src/chat.py",
+        "src/config.py",
+        "src/context/repository_context.py",
+        "src/executors/tool_executor.py",
+        "src/indexing/repository_indexer.py",
+        "src/knowledge/knowledge_store.py",
+        "src/llm.py",
+        "src/main.py",
+        "src/services/repository_service.py",
+        "src/test_tool.py",
+        "src/tools/base_tool.py",
+        "src/tools/read_file_tool.py",
+        "src/tools/registry.py",
+        "src/tools/scan_repository_tool.py",
+        "src/tools/tool_selector.py"
+    ],
+    "directories": [
+        "docs",
+        "src",
+        "src/agents",
+        "src/context",
+        "src/executors",
+        "src/indexing",
+        "src/knowledge",
+        "src/services",
+        "src/tools",
+        "tests"
+    ]
+}

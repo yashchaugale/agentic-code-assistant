@@ -15,4 +15,4 @@ class ToolExecutor:
                 "error": f"Unknown tool: {tool_name}"
             }
 
-        return tool(tool_input)
+        return tool.execute(tool_input)

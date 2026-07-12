@@ -1,10 +1,11 @@
-from tools.file_reader import read_file
-from tools.repository_scanner import scan_repository
+from tools.read_file_tool import ReadFileTool
+
+from tools.scan_repository_tool import ScanRepositoryTool
 
 TOOLS = {
 
-    "read_file": read_file,
+    ReadFileTool.name: ReadFileTool(),
 
-    "scan_repository": scan_repository
+    ScanRepositoryTool.name: ScanRepositoryTool()
 
 }

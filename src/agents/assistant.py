@@ -7,6 +7,7 @@ from chat import (
 from llm import ask_llm, summarize_file
 from tools.tool_selector import decide_tool
 from executors.tool_executor import ToolExecutor
+from context.repository_context import build_repository_context
 
 executor = ToolExecutor()
 
@@ -15,12 +16,16 @@ class AssistantAgent:
 
     def chat(self, user_input):
 
-        # Ask the LLM if a tool is required
+        # ------------------------------
+        # Ask the LLM if a tool is needed
+        # ------------------------------
         decision = decide_tool(user_input)
 
         print(f"\n[Decision] {decision}")
 
+        # ------------------------------
         # Execute Tool
+        # ------------------------------
         if decision.startswith("TOOL:"):
 
             try:
@@ -37,9 +42,54 @@ class AssistantAgent:
             if not tool_result["success"]:
                 return f"❌ {tool_result['error']}"
 
-            return summarize_file(tool_result["data"])
+            # ------------------------------
+            # Handle read_file Tool
+            # ------------------------------
+            if tool_name == "read_file":
 
-        # No tool required -> Normal Chat
+                return summarize_file(tool_result["data"])
+
+            # ------------------------------
+            # Handle scan_repository Tool
+            # ------------------------------
+            elif tool_name == "scan_repository":
+
+                context = build_repository_context(tool_result)
+
+                messages = [
+                    {
+                        "role": "system",
+                        "content": f"""
+You are RepoMind.
+
+You are an expert software architect.
+
+Use ONLY the repository context below to answer the user's question.
+
+Repository Context:
+
+{context}
+"""
+                    },
+                    {
+                        "role": "user",
+                        "content": user_input
+                    }
+                ]
+
+                return ask_llm(messages)
+
+            # ------------------------------
+            # Unknown Tool
+            # ------------------------------
+            else:
+
+                return f"❌ Tool '{tool_name}' is not supported."
+
+        # ------------------------------
+        # Normal Conversation
+        # ------------------------------
+
         add_user_message(user_input)
 
         answer = ask_llm(get_conversation())

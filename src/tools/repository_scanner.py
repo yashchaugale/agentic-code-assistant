@@ -8,13 +8,26 @@ def scan_repository(path="."):
     files = []
     directories = []
 
-    for item in root.iterdir():
+    # Ignore unnecessary folders
+    ignore = {
+        ".git",
+        "venv",
+        "__pycache__",
+        ".idea",
+        ".vscode",
+        ".DS_Store"
+    }
+
+    for item in root.rglob("*"):
+
+        if any(part in ignore for part in item.parts):
+            continue
 
         if item.is_file():
-            files.append(item.name)
+            files.append(str(item.relative_to(root)))
 
         elif item.is_dir():
-            directories.append(item.name)
+            directories.append(str(item.relative_to(root)))
 
     return {
         "success": True,

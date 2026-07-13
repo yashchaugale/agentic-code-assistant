@@ -55,19 +55,19 @@ class ScanRepositoryTool(BaseTool):
 
         framework = "Unknown"
 
-        if "requirements.txt" in files:
-            framework = "Python"
-
-        if "package.json" in files:
-            framework = "Node.js"
-
         if "manage.py" in files:
             framework = "Django"
 
-        if "app.py" in files:
+        elif "app.py" in files:
             framework = "Flask"
 
-        if "main.py" in files or "src/main.py" in files:
+        elif "package.json" in files:
+            framework = "Node.js"
+
+        elif "requirements.txt" in files:
+            framework = "Python"
+
+        elif "main.py" in files or "src/main.py" in files:
             framework = "Python Application"
 
     # ------------------------

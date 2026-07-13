@@ -1,24 +1,33 @@
-from agents.assistant import AssistantAgent
+import sys
+
 from services.repository_service import RepositoryService
 
-agent = AssistantAgent()
 
-print("=" * 50)
-print("🤖 Agentic Code Assistant")
-print("Type 'exit' to quit.")
-print("=" * 50)
 service = RepositoryService()
 
-service.analyze_repository()
 
-while True:
+if len(sys.argv) == 3 and sys.argv[1] == "analyze":
 
-    user_input = input("\nYou: ")
+    result = service.analyze_repository(sys.argv[2])
 
-    if user_input.lower() == "exit":
-        print("\n👋 Goodbye!")
-        break
+    if not result["success"]:
+        print(result["error"])
+        exit()
 
-    answer = agent.chat(user_input)
+    data = result["data"]
 
-    print("\nAI:", answer)
+    print("\n🧠 RepoMind Analysis\n")
+
+    print(f"Language: {data['language']}")
+    print(f"Framework: {data['framework']}")
+    print(f"Entry Point: {data['entry_point']}")
+
+    print("\nImportant Files:")
+
+    for file in data["important_files"]:
+        print("-", file)
+
+else:
+
+    print("Usage:")
+    print("python src/main.py analyze <github-url>")

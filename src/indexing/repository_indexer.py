@@ -9,11 +9,11 @@ class RepositoryIndexer:
 
         self.index = {}
 
-    def build(self):
+    def build(self, path="."):
 
         result = self.executor.execute(
             "scan_repository",
-            "."
+            path
         )
 
         if not result["success"]:

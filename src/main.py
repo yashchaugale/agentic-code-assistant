@@ -21,6 +21,29 @@ if len(sys.argv) == 3 and sys.argv[1] == "analyze":
     repo_name = sys.argv[2].split("/")[-1]
 
     show_dashboard(data, repo_name)
+    from analysis.repository_chat import RepositoryChat
+
+    chat = RepositoryChat()
+
+    print("\nAsk RepoMind anything about the repository.")
+    print("Type 'exit' to quit.\n")
+
+    while True:
+
+        question = input("Question: ")
+
+        if question.lower() == "exit":
+            break
+
+        answer = chat.ask(
+            repo_path,
+            data,
+            question
+        )
+
+        print("\nRepoMind:\n")
+        print(answer)
+        print()
 
 else:
 

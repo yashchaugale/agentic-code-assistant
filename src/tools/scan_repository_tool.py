@@ -38,16 +38,28 @@ class ScanRepositoryTool(BaseTool):
     # Detect Language
     # ------------------------
 
-        language = "Unknown"
+        python_count = sum(1 for f in files if f.endswith(".py"))
+        cpp_count = sum(1 for f in files if f.endswith(".cpp"))
+        c_count = sum(1 for f in files if f.endswith(".c"))
+        js_count = sum(1 for f in files if f.endswith(".js"))
+        ts_count = sum(1 for f in files if f.endswith(".ts"))
+        go_count = sum(1 for f in files if f.endswith(".go"))
+        java_count = sum(1 for f in files if f.endswith(".java"))
 
-        if any(f.endswith(".py") for f in files):
-            language = "Python"
+        counts = {
+            "Python": python_count,
+            "C++": cpp_count,
+            "C": c_count,
+            "JavaScript": js_count,
+            "TypeScript": ts_count,
+            "Go": go_count,
+            "Java": java_count,
+        }
 
-        elif any(f.endswith(".js") for f in files):
-            language = "JavaScript"
+        language = max(counts, key=counts.get)
 
-        elif any(f.endswith(".ts") for f in files):
-            language = "TypeScript"
+        if counts[language] == 0:
+            language = "Unknown"
 
     # ------------------------
     # Detect Framework
@@ -55,11 +67,8 @@ class ScanRepositoryTool(BaseTool):
 
         framework = "Unknown"
 
-        if "manage.py" in files:
-            framework = "Django"
-
-        elif "app.py" in files:
-            framework = "Flask"
+        if "CMakeLists.txt" in files:
+            framework = "CMake"
 
         elif "package.json" in files:
             framework = "Node.js"
@@ -67,8 +76,17 @@ class ScanRepositoryTool(BaseTool):
         elif "requirements.txt" in files:
             framework = "Python"
 
-        elif "main.py" in files or "src/main.py" in files:
-            framework = "Python Application"
+        elif "manage.py" in files:
+            framework = "Django"
+
+        elif "Cargo.toml" in files:
+            framework = "Rust"
+
+        elif "go.mod" in files:
+            framework = "Go Modules"
+
+        elif "pom.xml" in files:
+            framework = "Maven"
 
     # ------------------------
     # Important Files
@@ -96,12 +114,21 @@ class ScanRepositoryTool(BaseTool):
 
         entry = None
 
-        for candidate in [
+        entry_candidates = [
+            "src/main.cpp",
+            "main.cpp",
+            "src/main.c",
+            "main.c",
             "src/main.py",
             "main.py",
             "app.py",
-            "manage.py"
-        ]:
+            "manage.py",
+            "server.py",
+            "src/main.go",
+            "main.go"
+        ]
+
+        for candidate in entry_candidates:
 
             if candidate in files:
                 entry = candidate

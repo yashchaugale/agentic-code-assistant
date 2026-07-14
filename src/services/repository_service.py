@@ -20,4 +20,9 @@ class RepositoryService:
         if result["success"]:
             self.store.save(result["data"])
 
-        return result
+        return {
+            "success": result["success"],
+            "repository_path": str(repo_path),
+            "data": result["data"],
+            "error": result["error"]
+        }

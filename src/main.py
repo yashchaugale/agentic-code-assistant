@@ -1,6 +1,7 @@
 import sys
 
 from services.repository_service import RepositoryService
+from ui.dashboard import show_dashboard
 
 
 service = RepositoryService()
@@ -15,17 +16,11 @@ if len(sys.argv) == 3 and sys.argv[1] == "analyze":
         exit()
 
     data = result["data"]
+    repo_path = result["repository_path"]
 
-    print("\n🧠 RepoMind Analysis\n")
+    repo_name = sys.argv[2].split("/")[-1]
 
-    print(f"Language: {data['language']}")
-    print(f"Framework: {data['framework']}")
-    print(f"Entry Point: {data['entry_point']}")
-
-    print("\nImportant Files:")
-
-    for file in data["important_files"]:
-        print("-", file)
+    show_dashboard(data, repo_name)
 
 else:
 

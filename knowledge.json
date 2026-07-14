@@ -1,7 +1,7 @@
 {
-    "language": "Python",
-    "framework": "Unknown",
-    "entry_point": null,
+    "language": "C++",
+    "framework": "CMake",
+    "entry_point": "src/main.cpp",
     "important_files": [
         "README.md"
     ],

@@ -3,6 +3,7 @@ from rich.table import Table
 from rich.panel import Panel
 from analysis.repository_score import RepositoryScore
 from analysis.repository_insights import RepositoryInsights
+from analysis.reading_order import ReadingOrder
 
 
 console = Console()
@@ -60,5 +61,15 @@ def show_dashboard(data, repo_name):
 
     for item in insights["improvements"]:
         console.print(f"⚠ {item}")
+
+    
+
+    reading_order = ReadingOrder().generate(data)
+
+    console.print()
+    console.print("[bold cyan]📚 Recommended Reading Order[/bold cyan]")
+
+    for i, file in enumerate(reading_order, start=1):
+        console.print(f"{i}. {file}")
 
     

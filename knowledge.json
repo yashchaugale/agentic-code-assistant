@@ -42,5 +42,106 @@
     "directories": [
         "include",
         "src"
+    ],
+    "summaries": {
+        "README.md": "The provided document is a detailed guide to a Deep Packet Inspection (DPI) engine, which is a system used to examine the contents of network packets. The guide covers everything from basic networking concepts to a complete code architecture. Here is a summary of the key points:\n\n**What is DPI?**\n\n* DPI is a technology used to examine the contents of network packets as they pass through a checkpoint.\n* It looks inside the packet payload, unlike simple firewalls that only examine packet headers.\n* DPI has various real-world uses, including throttling or blocking certain applications, blocking social media on office networks, parental controls, and detecting malware or intrusion attempts.\n\n**Networking Background**\n\n* The network stack consists of multiple layers: Application (Layer 7), Transport (Layer 4), Network (Layer 3), and Data Link (Layer 2).\n* A packet's structure is like a Russian nesting doll, with headers wrapped inside headers.\n* A connection is uniquely identified by a 5-tuple: source IP, destination IP, source port, destination port, and protocol.\n\n**Project Overview**\n\n* The DPI engine reads a PCAP file, parses each packet, extracts the SNI (Server Name Indication), classifies the application type, checks blocking rules, and forwards or drops the packet.\n* There are two versions: a simple, single-threaded version and a multi-threaded version for production use.\n\n**File Structure**\n\n* The project consists of multiple files, including header files, implementation files, and a sample PCAP file.\n* The `pcap_reader` and `packet_parser` files handle PCAP file reading and protocol parsing, respectively.\n* The `sni_extractor` file extracts the SNI from TLS and HTTP packets.\n* The `types` file defines data structures used throughout the project.\n\n**The Journey of a Packet**\n\n* The simple version reads a PCAP file, parses each packet, extracts the SNI, classifies the application type, checks blocking rules, and forwards or drops the packet.\n* The multi-threaded version uses load balancers and fast path threads to process packets in parallel.\n\n**Thread-Safe Queue**\n\n* A thread-safe queue is used to transfer packets between threads.\n* The queue is implemented using a mutex, condition variables, and a queue data structure.\n\n**Deep Dive: Each Component**\n\n* The `pcap_reader` and `packet_parser` files are explained in detail, including the structures and functions used.\n* The `sni_extractor` file is also explained, including the process of extracting the SNI from TLS and HTTP packets.\n* The `types` file defines data structures used throughout the project, including the `FiveTuple` and `AppType` structures.\n\n**How SNI Extraction Works**\n\n* SNI extraction is explained in detail, including the TLS handshake process and the structure of the Client Hello packet.\n* The SNI extraction code is also explained, including the process of navigating to the extensions and extracting the SNI value.\n\n**How Blocking Works**\n\n* Blocking is explained in detail, including the different types of rules (IP, app, and domain) and the blocking flow.\n* The blocking code is also explained, including the process of checking rules and dropping packets.\n\n**Building and Running**\n\n* The project can be built using g++ or clang++ and run using the command line.\n* The command-line arguments are explained, including the input PCAP file, output PCAP file, and blocking rules.\n\n**Understanding the Output**\n\n* The output is explained in detail, including the configuration, rules, total packets, forwarded packets, dropped packets, thread statistics, and application breakdown.\n* Each section of the output is explained, including the meaning of each metric.\n\n**Extending the Project**\n\n* Ideas for improvement are presented, including adding more app signatures, bandwidth throttling, a live statistics dashboard, QUIC/HTTP3 support, and persistent rules.\n* These features can be implemented by modifying the existing code or adding new files and functions.\n\nOverall, the DPI engine is a complex system that requires a deep understanding of networking concepts, protocol parsing, and thread-safe programming. The guide provides a comprehensive overview of the project, including the code architecture, components, and output."
+    },
+    "source_files": [
+        {
+            "path": "generate_test_pcap.py",
+            "language": "Python",
+            "size": 9445,
+            "imports": [
+                "random",
+                "struct"
+            ],
+            "classes": [
+                "PCAPWriter"
+            ],
+            "functions": [
+                "create_ethernet_header",
+                "create_ip_header",
+                "create_tcp_header",
+                "create_udp_header",
+                "create_tls_client_hello",
+                "create_http_request",
+                "create_dns_query",
+                "main",
+                "__init__",
+                "write_global_header",
+                "write_packet",
+                "close"
+            ]
+        },
+        {
+            "path": "src/types.cpp",
+            "language": "C++",
+            "size": 6788
+        },
+        {
+            "path": "src/rule_manager.cpp",
+            "language": "C++",
+            "size": 11121
+        },
+        {
+            "path": "src/dpi_engine.cpp",
+            "language": "C++",
+            "size": 18068
+        },
+        {
+            "path": "src/fast_path.cpp",
+            "language": "C++",
+            "size": 13323
+        },
+        {
+            "path": "src/load_balancer.cpp",
+            "language": "C++",
+            "size": 4050
+        },
+        {
+            "path": "src/packet_parser.cpp",
+            "language": "C++",
+            "size": 6932
+        },
+        {
+            "path": "src/sni_extractor.cpp",
+            "language": "C++",
+            "size": 9985
+        },
+        {
+            "path": "src/connection_tracker.cpp",
+            "language": "C++",
+            "size": 9746
+        },
+        {
+            "path": "src/pcap_reader.cpp",
+            "language": "C++",
+            "size": 4046
+        },
+        {
+            "path": "src/main_simple.cpp",
+            "language": "C++",
+            "size": 2018
+        },
+        {
+            "path": "src/main_dpi.cpp",
+            "language": "C++",
+            "size": 5199
+        },
+        {
+            "path": "src/dpi_mt.cpp",
+            "language": "C++",
+            "size": 24609
+        },
+        {
+            "path": "src/main.cpp",
+            "language": "C++",
+            "size": 5175
+        },
+        {
+            "path": "src/main_working.cpp",
+            "language": "C++",
+            "size": 12731
+        }
     ]
 }

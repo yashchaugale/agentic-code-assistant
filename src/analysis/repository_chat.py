@@ -1,45 +1,30 @@
-from pathlib import Path
-
 from llm import ask_llm
 
 
 class RepositoryChat:
 
-    def ask(self, repository_path, metadata, question):
-
-        readme = ""
-
-        readme_path = Path(repository_path) / "README.md"
-
-        if readme_path.exists():
-            readme = readme_path.read_text(
-                encoding="utf-8",
-                errors="ignore"
-            )
+    def ask(self, knowledge, question):
 
         prompt = f"""
 You are RepoMind.
 
-You are helping a developer understand a GitHub repository.
+You are an AI software architect helping developers understand repositories.
 
-Repository Metadata:
+Repository Knowledge:
 
-{metadata}
-
-README:
-
-{readme}
+{knowledge}
 
 Question:
 
 {question}
 
-Answer clearly.
+Rules:
 
-If the README does not contain enough information,
-say that more source-code analysis is required.
-
-Never invent facts.
+1. Answer only using the repository knowledge.
+2. If you don't know the answer, say:
+   "More source-code analysis is required."
+3. Never invent information.
+4. Keep answers concise and technical.
 """
 
         return ask_llm(

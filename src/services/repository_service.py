@@ -1,3 +1,4 @@
+from knowledge.knowledge_builder import KnowledgeBuilder
 from indexing.repository_indexer import RepositoryIndexer
 from knowledge.knowledge_store import KnowledgeStore
 from services.github_service import GitHubService
@@ -9,6 +10,7 @@ class RepositoryService:
 
         self.github = GitHubService()
         self.indexer = RepositoryIndexer()
+        self.builder = KnowledgeBuilder()
         self.store = KnowledgeStore()
 
     def analyze_repository(self, repo_url):
@@ -18,11 +20,17 @@ class RepositoryService:
         result = self.indexer.build(repo_path)
 
         if result["success"]:
-            self.store.save(result["data"])
+
+            knowledge = self.builder.build(
+                repo_path,
+                result["data"]
+            )
+
+            self.store.save(knowledge)
 
         return {
             "success": result["success"],
             "repository_path": str(repo_path),
-            "data": result["data"],
+            "data": knowledge if result["success"] else result["data"],
             "error": result["error"]
         }

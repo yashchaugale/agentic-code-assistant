@@ -1,11 +1,79 @@
+from pathlib import Path
+
 from llm import summarize_file
+from indexing.source_code_indexer import SourceCodeIndexer
+from parsers.python_parser import PythonParser
 
 
 class KnowledgeBuilder:
 
-    def summarize_module(
+    def __init__(self):
+
+        self.indexer = SourceCodeIndexer()
+
+        self.python_parser = PythonParser()
+
+    def build(
         self,
-        file_content
+        repository_path,
+        metadata
     ):
 
-        return summarize_file(file_content)
+        # Copy metadata
+        knowledge = metadata.copy()
+
+        # Store LLM summaries
+        summaries = {}
+
+        for file in metadata["important_files"]:
+
+            file_path = Path(repository_path) / file
+
+            if not file_path.exists():
+                continue
+
+            try:
+
+                content = file_path.read_text(
+                    encoding="utf-8",
+                    errors="ignore"
+                )
+
+            except Exception:
+                continue
+
+            summary = summarize_file(content)
+
+            if summary:
+                summaries[file] = summary
+
+        knowledge["summaries"] = summaries
+
+        # Build source code index
+        source_files = self.indexer.build(
+            repository_path
+        )
+
+        parsed_files = []
+
+        for file in source_files:
+
+            if file["language"] == "Python":
+
+                parsed = self.python_parser.parse(
+                    Path(repository_path) / file["path"]
+                )
+
+                if parsed:
+
+                    file["imports"] = parsed["imports"]
+
+                    file["classes"] = parsed["classes"]
+
+                    file["functions"] = parsed["functions"]
+
+            parsed_files.append(file)
+
+        knowledge["source_files"] = parsed_files
+
+        return knowledge

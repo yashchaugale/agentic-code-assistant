@@ -6,7 +6,6 @@ class RepositoryIndexer:
     def __init__(self):
 
         self.executor = ToolExecutor()
-
         self.index = {}
 
     def build(self, path="."):

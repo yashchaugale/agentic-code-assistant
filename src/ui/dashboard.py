@@ -4,6 +4,7 @@ from rich.panel import Panel
 from analysis.repository_score import RepositoryScore
 from analysis.repository_insights import RepositoryInsights
 from analysis.reading_order import ReadingOrder
+from analysis.architecture_summary import ArchitectureSummary
 
 
 console = Console()
@@ -69,7 +70,30 @@ def show_dashboard(data, repo_name):
     console.print()
     console.print("[bold cyan]📚 Recommended Reading Order[/bold cyan]")
 
-    for i, file in enumerate(reading_order, start=1):
-        console.print(f"{i}. {file}")
+    for i, item in enumerate(reading_order, start=1):
+
+        console.print(
+            f"{i}. [green]{item['file']}[/green]"
+        )
+
+        console.print(
+            f"   {item['reason']}"
+        )
+    
+    summary = ArchitectureSummary().generate(data)
+
+    console.print()
+    console.print("[bold magenta]🏗 Architecture Summary[/bold magenta]")
+
+    console.print(f"Entry Point : {summary['entry_point']}")
+    console.print(f"Python Files: {summary['python_files']}")
+    console.print(f"Functions   : {summary['functions']}")
+    console.print(f"Classes     : {len(summary['classes'])}")
+
+    console.print("\nLayers:")
+
+    for layer in summary["layers"]:
+        console.print(f"  • {layer}")
+
 
     

@@ -3,6 +3,7 @@ from pathlib import Path
 from llm import summarize_file
 from indexing.source_code_indexer import SourceCodeIndexer
 from parsers.python_parser import PythonParser
+from analysis.symbol_index import SymbolIndex
 
 
 class KnowledgeBuilder:
@@ -12,6 +13,7 @@ class KnowledgeBuilder:
         self.indexer = SourceCodeIndexer()
 
         self.python_parser = PythonParser()
+        self.symbol_index = SymbolIndex()
 
     def build(
         self,
@@ -75,5 +77,9 @@ class KnowledgeBuilder:
             parsed_files.append(file)
 
         knowledge["source_files"] = parsed_files
+
+        knowledge["symbol_index"] = self.symbol_index.build(
+            knowledge
+        )
 
         return knowledge

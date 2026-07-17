@@ -1,9 +1,34 @@
 from llm import ask_llm
+from analysis.query_router import QueryRouter
+from analysis.code_navigator import CodeNavigator
 
 
 class RepositoryChat:
 
+    def __init__(self):
+
+        self.router = QueryRouter()
+        self.navigator = CodeNavigator()
+
     def ask(self, knowledge, question):
+        route = self.router.route(question)
+
+        if route == "class_lookup":
+
+            symbol = (
+                question.replace("Where is", "")
+                .replace("where is", "")
+                .replace("?", "")
+                .strip()
+            )
+
+            path = self.navigator.where_is(
+                knowledge,
+                symbol
+            )
+
+            if path:
+                return f"{symbol} is defined in:\n\n{path}"
 
         prompt = f"""
 You are RepoMind.

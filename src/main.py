@@ -6,6 +6,7 @@ from analysis.repository_chat import RepositoryChat
 from engine.engine import RepoMindEngine
 
 
+
 engine = RepoMindEngine()
 
 
@@ -23,7 +24,13 @@ if len(sys.argv) == 3 and sys.argv[1] == "analyze":
 
     repo_name = sys.argv[2].split("/")[-1]
 
-    show_dashboard(data, repo_name)
+    show_dashboard(data, repo_name,result.get("review"))
+    
+
+    for finding in result["review"]:
+
+        print(f"[{finding['severity']}] {finding['title']}")
+        print(f"  {finding['description']}\n")
 
     print("\nAsk RepoMind anything about the repository.")
     print("Type 'exit' to quit.\n")

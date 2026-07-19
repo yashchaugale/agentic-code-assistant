@@ -10,7 +10,7 @@ from analysis.architecture_summary import ArchitectureSummary
 console = Console()
 
 
-def show_dashboard(data, repo_name):
+def show_dashboard(data, repo_name,review=None):
 
     score = RepositoryScore().calculate(data)
     insights = RepositoryInsights().analyze(data)
@@ -94,6 +94,33 @@ def show_dashboard(data, repo_name):
 
     for layer in summary["layers"]:
         console.print(f"  • {layer}")
+
+    if review:
+
+        console.print()
+        console.print("[bold red]⚠ Code Review[/bold red]")
+
+        for finding in review:
+
+            severity = finding["severity"]
+
+            if severity == "HIGH":
+                color = "red"
+            elif severity == "MEDIUM":
+                color = "yellow"
+            else:
+                color = "cyan"
+
+            console.print(
+                f"[{color}][{severity}][/{color}] {finding['title']}"
+            )
+
+            console.print(
+                f"    {finding['description']}"
+            )
+
+            console.print()
+        
 
 
     

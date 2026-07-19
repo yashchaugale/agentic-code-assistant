@@ -1,5 +1,6 @@
 from services.repository_service import RepositoryService
 from analysis.repository_chat import RepositoryChat
+from analysis.code_review import CodeReview
 
 
 class RepoMindEngine:
@@ -8,6 +9,7 @@ class RepoMindEngine:
 
         self.repository_service = RepositoryService()
         self.chat = RepositoryChat()
+        self.code_review = CodeReview()
 
         self.current_repository = None
 
@@ -19,6 +21,12 @@ class RepoMindEngine:
 
         if result["success"]:
             self.current_repository = result["data"]
+            review = self.code_review.review(
+            result["repository_path"],
+            result["data"]
+        )
+
+        result["review"] = review
 
         return result
 

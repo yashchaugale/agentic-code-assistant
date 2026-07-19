@@ -8,19 +8,27 @@ class PythonParser:
 
         path = Path(file_path)
 
+        
+
         try:
             source = path.read_text(
                 encoding="utf-8",
                 errors="ignore"
             )
 
-        except Exception:
+            
+
+        except Exception as e:
+            
             return None
 
         try:
             tree = ast.parse(source)
 
-        except Exception:
+            
+
+        except Exception as e:
+            
             return None
 
         imports = []
@@ -41,11 +49,26 @@ class PythonParser:
 
             elif isinstance(node, ast.ClassDef):
 
-                classes.append(node.name)
+                method_names = []
+
+                for item in node.body:
+
+                    if isinstance(item, ast.FunctionDef):
+
+                        method_names.append(item.name)
+
+                classes.append({
+                    "name": node.name,
+                    "methods": method_names
+                })
 
             elif isinstance(node, ast.FunctionDef):
 
-                functions.append(node.name)
+                functions.append({
+                    "name": node.name,
+                    "start_line": node.lineno,
+                    "end_line": node.end_lineno
+                })
 
         return {
             "path": str(path),

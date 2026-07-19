@@ -44,7 +44,7 @@
         "src"
     ],
     "summaries": {
-        "README.md": "The file describes a Deep Packet Inspection (DPI) engine, a system used to examine the contents of network packets as they pass through a checkpoint. The DPI engine is designed to identify and control application usage on a network.\n\nThe engine works by parsing network protocol headers, extracting relevant information such as source and destination IP addresses, ports, and protocols, and then using this information to identify the application or service being used. The engine also extracts the Server Name Indication (SNI) from TLS/HTTPS handshakes, which allows it to identify the domain name of the server being accessed, even if the traffic is encrypted.\n\nThe DPI engine has two versions: a simple version and a multi-threaded version. The simple version is designed for learning and small captures, while the multi-threaded version is designed for production use and large captures. The multi-threaded version uses a load balancer to distribute work across multiple threads, which improves performance and scalability.\n\nThe engine has several key components, including:\n\n* A PCAP reader, which reads network captures saved by Wireshark\n* A packet parser, which extracts protocol fields from raw bytes\n* An SNI extractor, which extracts domain names from TLS and HTTP traffic\n* A rule manager, which applies blocking rules to identified traffic\n* A connection tracker, which manages stateful connections\n* A load balancer, which distributes work across multiple threads\n\nThe engine also has a user-friendly interface that allows users to configure blocking rules, view statistics, and generate reports.\n\nThe file also provides a detailed explanation of the DPI engine's architecture, components, and implementation, including code snippets and examples. It also provides guidance on how to build and run the engine, as well as how to extend and improve it.\n\nOverall, the DPI engine is a powerful tool for network operators who need to identify and control application usage on their networks. Its ability to extract SNI information from encrypted traffic makes it particularly useful for identifying and blocking specific domains or applications."
+        "README.md": "The provided file is a comprehensive guide to a Deep Packet Inspection (DPI) engine project. DPI is a technology used to examine the contents of network packets as they pass through a checkpoint. \n\nHere's a summary of the project:\n\n1. **Introduction to DPI**: DPI examines the contents of network packets, unlike simple firewalls that only look at packet headers. It's used by ISPs to throttle or block certain applications, by enterprises to block social media on office networks, and by parental controls to block inappropriate websites.\n\n2. **Networking Background**: The project explains the network stack (layers), a packet's structure, and the concept of the five-tuple (source IP, destination IP, source port, destination port, and protocol).\n\n3. **Project Overview**: The DPI engine takes a PCAP (Packet Capture) file as input, parses the packets, classifies the traffic, and applies blocking rules based on IP, application, or domain.\n\n4. **File Structure**: The project consists of several files, including `pcap_reader.h`, `packet_parser.h`, `sni_extractor.h`, `types.h`, `main_working.cpp`, and `dpi_mt.cpp`.\n\n5. **The Journey of a Packet**: The project explains how a packet passes through the DPI engine. It involves reading the PCAP file, parsing the packet, extracting the SNI (Server Name Indication), classifying the traffic, applying blocking rules, and forwarding or dropping the packet.\n\n6. **Multi-threaded Version**: The project also includes a multi-threaded version that adds parallelism to improve performance.\n\n7. **Deep Dive: Each Component**: The project provides a detailed explanation of each component, including `pcap_reader`, `packet_parser`, `sni_extractor`, and `types`.\n\n8. **How SNI Extraction Works**: The project explains how to extract the SNI from a TLS (Transport Layer Security) handshake.\n\n9. **How Blocking Works**: The project explains how the DPI engine applies blocking rules based on IP, application, or domain.\n\n10. **Building and Running**: The project provides instructions on how to build and run the DPI engine, including the required prerequisites and build commands.\n\n11. **Understanding the Output**: The project explains how to interpret the output of the DPI engine, including the processing report, thread statistics, and application breakdown.\n\n12. **Extending the Project**: The project provides ideas for improvement, including adding more application signatures, bandwidth throttling, a live statistics dashboard, QUIC/HTTP3 support, and persistent rules.\n\nOverall, the project provides a comprehensive guide to building a DPI engine, including the theoretical background, technical details, and implementation."
     },
     "source_files": [
         {
@@ -56,21 +56,77 @@
                 "struct"
             ],
             "classes": [
-                "PCAPWriter"
+                {
+                    "name": "PCAPWriter",
+                    "methods": [
+                        "__init__",
+                        "write_global_header",
+                        "write_packet",
+                        "close"
+                    ]
+                }
             ],
             "functions": [
-                "create_ethernet_header",
-                "create_ip_header",
-                "create_tcp_header",
-                "create_udp_header",
-                "create_tls_client_hello",
-                "create_http_request",
-                "create_dns_query",
-                "main",
-                "__init__",
-                "write_global_header",
-                "write_packet",
-                "close"
+                {
+                    "name": "create_ethernet_header",
+                    "start_line": 34,
+                    "end_line": 37
+                },
+                {
+                    "name": "create_ip_header",
+                    "start_line": 40,
+                    "end_line": 57
+                },
+                {
+                    "name": "create_tcp_header",
+                    "start_line": 60,
+                    "end_line": 70
+                },
+                {
+                    "name": "create_udp_header",
+                    "start_line": 73,
+                    "end_line": 76
+                },
+                {
+                    "name": "create_tls_client_hello",
+                    "start_line": 79,
+                    "end_line": 115
+                },
+                {
+                    "name": "create_http_request",
+                    "start_line": 118,
+                    "end_line": 119
+                },
+                {
+                    "name": "create_dns_query",
+                    "start_line": 122,
+                    "end_line": 137
+                },
+                {
+                    "name": "main",
+                    "start_line": 140,
+                    "end_line": 263
+                },
+                {
+                    "name": "__init__",
+                    "start_line": 11,
+                    "end_line": 14
+                },
+                {
+                    "name": "write_global_header",
+                    "start_line": 16,
+                    "end_line": 19
+                },
+                {
+                    "name": "write_packet",
+                    "start_line": 21,
+                    "end_line": 28
+                },
+                {
+                    "name": "close",
+                    "start_line": 30,
+                    "end_line": 31
+                }
             ]
         },
         {

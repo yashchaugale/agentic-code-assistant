@@ -12,13 +12,22 @@ class SymbolIndex:
 
             path = file["path"]
 
+            print("=" * 50)
+            print("FILE:", path)
+            print("FUNCTIONS:", file.get("functions"))
+
             # Index classes
             for cls in file.get("classes", []):
-                class_index[cls] = path
+                class_index[cls["name"]] = path
 
             # Index functions
             for func in file.get("functions", []):
-                function_index[func].append(path)
+
+                if isinstance(func, str):
+                    print("❌ FOUND STRING FUNCTION!")
+                    return
+
+                function_index[func["name"]].append(path)
 
         return {
             "classes": class_index,

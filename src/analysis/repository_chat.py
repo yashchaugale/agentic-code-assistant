@@ -10,7 +10,7 @@ class RepositoryChat:
         self.router = QueryRouter()
         self.navigator = CodeNavigator()
 
-    def ask(self, knowledge, question):
+    def ask(self, knowledge, retrieved_chunks, question):
         route = self.router.route(question)
 
         if route == "class_lookup":
@@ -29,27 +29,41 @@ class RepositoryChat:
 
             if path:
                 return f"{symbol} is defined in:\n\n{path}"
+            
+        code_context = ""
+
+        for chunk in retrieved_chunks:
+            code_context += f"""
+        File: {chunk['file']}
+        Lines: {chunk['start_line']} - {chunk['end_line']}
+
+        {chunk['content']}
+
+        ----------------------------------------
+        """
 
         prompt = f"""
-You are RepoMind.
+You are RepoMind, an expert software architect.
 
-You are an AI software architect helping developers understand repositories.
+Repository Metadata:
+Language: {knowledge.get("language")}
+Framework: {knowledge.get("framework")}
+Entry Point: {knowledge.get("entry_point")}
 
-Repository Knowledge:
+Important Files:
+{knowledge.get("important_files")}
 
-{knowledge}
+Relevant Code:
+{code_context}
+
+Instructions:
+- Use the retrieved code as the primary source.
+- Mention filenames when appropriate.
+- If the answer isn't present in the code, say so.
+- Never invent implementation details.
 
 Question:
-
 {question}
-
-Rules:
-
-1. Answer only using the repository knowledge.
-2. If you don't know the answer, say:
-   "More source-code analysis is required."
-3. Never invent information.
-4. Keep answers concise and technical.
 """
 
         return ask_llm(

@@ -67,9 +67,4 @@ def chat(request: ChatRequest):
             "error": "Invalid session_id"
         }
 
-    answer = engine.ask(request.question)
-
-    return {
-        "success": True,
-        "answer": answer
-    }
+    return engine.ask(request.question)

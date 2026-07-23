@@ -3,11 +3,13 @@ import { useState } from "react";
 import Header from "./components/Header";
 import RepositoryForm from "./components/RepositoryForm";
 import RepositoryInfo from "./components/RepositoryInfo";
+import RepositoryChat from "./components/RepositoryChat";
 
 import api from "./services/api";
 
 function App() {
   const [repository, setRepository] = useState(null);
+  const [sessionId, setSessionId] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const analyzeRepository = async (repoUrl) => {
@@ -21,6 +23,9 @@ function App() {
       console.log("DATA:", response.data);
 
       setRepository(response.data.analysis);
+      setSessionId(response.data.session_id);
+
+      console.log("Session:", response.data.session_id);
     } catch (error) {
   console.error("Error:", error);
 
@@ -50,6 +55,9 @@ function App() {
         )}
 
         <RepositoryInfo repository={repository} />
+        {repository && (
+        <RepositoryChat sessionId={sessionId} />
+        )}
 
       </main>
     </div>
